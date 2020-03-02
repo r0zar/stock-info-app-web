@@ -1,16 +1,39 @@
+import _ from 'lodash';
+
 export const INCREMENT_REQUESTED = 'counter/INCREMENT_REQUESTED'
 export const INCREMENT = 'counter/INCREMENT'
 export const DECREMENT_REQUESTED = 'counter/DECREMENT_REQUESTED'
 export const DECREMENT = 'counter/DECREMENT'
+const axios = require('axios');
+const moment = require('moment');
 
 const initialState = {
   count: 0,
   isIncrementing: false,
-  isDecrementing: false
+  isDecrementing: false,
+  data: {
+    id: '',
+    color: '',
+    data: []
+  }
 }
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case 'SET_DATA_REQUESTED':
+      return {
+        ...state,
+        isIncrementing: true
+      }
+
+    case 'SET_DATA':
+      return {
+        ...state,
+        count: state.count + 1,
+        isIncrementing: !state.isIncrementing,
+        data: action.data
+      }
+      
     case INCREMENT_REQUESTED:
       return {
         ...state,
@@ -64,6 +87,32 @@ export const incrementAsync = () => {
       dispatch({
         type: INCREMENT
       })
+    }, 3000)
+  }
+}
+
+export const setData = (symbol) => {
+  return dispatch => {
+    dispatch({
+      type: 'SET_DATA_REQUESTED'
+    })
+    // const range = '1m'
+    // const date = '2017-04-03'
+    axios.get(`https://cloud.iexapis.com/v1/stock/${symbol}/chart?token=pk_4e3bfa5acd7c456995c6e7419dc5b575`)
+    .then(resp => {
+      const data = _.map(resp.data, data => {return {x: moment(data.date).format("MMM Do"), y: data.open > 100 ? Math.floor(data.open) : data}})
+      dispatch({
+        type: 'SET_DATA',
+        data: {
+          id: symbol,
+          color: "hsl(193, 95%, 68%)",
+          data
+        }
+      })
+    })
+
+    return setTimeout(() => {
+      
     }, 3000)
   }
 }

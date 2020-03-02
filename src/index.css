@@ -14,3 +14,8 @@ body {
 button:disabled {
   opacity: 0.5;
 }
+
+.fill {
+  height: 24rem; 
+  width: 100%;
+}

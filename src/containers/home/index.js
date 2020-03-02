@@ -6,13 +6,23 @@ import {
   increment,
   incrementAsync,
   decrement,
-  decrementAsync
+  decrementAsync,
+  setData
 } from '../../modules/counter'
 
 const Home = props => (
   <div>
     <h1>Home</h1>
-    <p>Count: {props.count}</p>
+    
+    <div className="fill">
+      <p>
+        <br />
+        <div>Welcome to the stock info app.</div>
+        <br />
+        <div>Search for a stock to get started!</div>
+      </p>
+    </div>
+    {/* <p>Count: {props.count}</p>
 
     <p>
       <button onClick={props.increment}>Increment</button>
@@ -29,10 +39,16 @@ const Home = props => (
     </p>
 
     <p>
+      <button onClick={props.setData} disabled={props.isIncrementing}>
+        Set Data
+      </button>
+    </p>
+
+    <p>
       <button onClick={() => props.changePage()}>
         Go to about page via redux
       </button>
-    </p>
+    </p> */}
   </div>
 )
 
@@ -49,6 +65,7 @@ const mapDispatchToProps = dispatch =>
       incrementAsync,
       decrement,
       decrementAsync,
+      setData,
       changePage: () => push('/about-us')
     },
     dispatch

@@ -1,14 +1,15 @@
 {
   "private": true,
-  "homepage": "https://create-react-app-redux.now.sh",
+  "homepage": "http://r0zar.github.io/stock-info-app-web",
   "scripts": {
-    "deploy": "now && now alias",
     "start": "react-scripts start",
     "now-start": "serve -s ./build",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "precommit": "pretty-quick --staged"
+    "precommit": "pretty-quick --staged",
+    "predeploy": "yarn build",
+    "deploy": "gh-pages -d build"
   },
   "devDependencies": {
     "prettier": "1.19.1",
@@ -18,6 +19,7 @@
     "@nivo/line": "^0.61.1",
     "axios": "^0.19.2",
     "connected-react-router": "4.5.0",
+    "gh-pages": "^2.2.0",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "react": "16.12.0",

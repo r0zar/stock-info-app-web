@@ -1,7 +1,6 @@
 import React from 'react'
 import { Route } from 'react-router-dom'
 import Home from '../home'
-import About from '../about'
 import Stocks from '../stocks'
 import { Container, Divider, Grid, Header, Image, List, Menu, Segment } from 'semantic-ui-react'
 import StockSearch from '../Search'
@@ -29,7 +28,6 @@ const App = props => (
     <Container text style={{ marginTop: '7em' }}>
       <Route exact path="/" component={Home} />
       <Route exact path="/home" component={Home} />
-      <Route exact path="/about-us" component={About} />
       <Route path="/stocks/:stockId" component={Stocks} />
     </Container>
 

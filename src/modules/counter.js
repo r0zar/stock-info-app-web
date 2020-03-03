@@ -1,19 +1,11 @@
 import _ from 'lodash';
-
-export const INCREMENT_REQUESTED = 'counter/INCREMENT_REQUESTED'
-export const INCREMENT = 'counter/INCREMENT'
-export const DECREMENT_REQUESTED = 'counter/DECREMENT_REQUESTED'
-export const DECREMENT = 'counter/DECREMENT'
 const axios = require('axios');
 const moment = require('moment');
+const IEX_CLOUD_API_TOKEN = 'pk_212c74cb0280453baa89ddb99e331fd1 '
 
 const initialState = {
-  count: 0,
-  isIncrementing: false,
-  isDecrementing: false,
   data: {
     id: '',
-    color: '',
     data: []
   }
 }
@@ -33,112 +25,34 @@ export default (state = initialState, action) => {
         isIncrementing: !state.isIncrementing,
         data: action.data
       }
-      
-    case INCREMENT_REQUESTED:
-      return {
-        ...state,
-        isIncrementing: true
-      }
-
-    case INCREMENT:
-      return {
-        ...state,
-        count: state.count + 1,
-        isIncrementing: !state.isIncrementing
-      }
-
-    case DECREMENT_REQUESTED:
-      return {
-        ...state,
-        isDecrementing: true
-      }
-
-    case DECREMENT:
-      return {
-        ...state,
-        count: state.count - 1,
-        isDecrementing: !state.isDecrementing
-      }
-
+    
     default:
       return state
   }
 }
 
-export const increment = () => {
-  return dispatch => {
-    dispatch({
-      type: INCREMENT_REQUESTED
-    })
-
-    dispatch({
-      type: INCREMENT
-    })
-  }
-}
-
-export const incrementAsync = () => {
-  return dispatch => {
-    dispatch({
-      type: INCREMENT_REQUESTED
-    })
-
-    return setTimeout(() => {
-      dispatch({
-        type: INCREMENT
-      })
-    }, 3000)
-  }
-}
 
 export const setData = (symbol) => {
   return dispatch => {
-    dispatch({
-      type: 'SET_DATA_REQUESTED'
-    })
+    dispatch({type: 'SET_DATA_REQUESTED'})
     // const range = '1m'
     // const date = '2017-04-03'
-    axios.get(`https://cloud.iexapis.com/v1/stock/${symbol}/chart?token=pk_4e3bfa5acd7c456995c6e7419dc5b575`)
+    axios.get(`https://cloud.iexapis.com/v1/stock/${symbol}/chart?token=${IEX_CLOUD_API_TOKEN}`)
     .then(resp => {
-      const data = _.map(resp.data, data => {return {x: moment(data.date).format("MMM Do"), y: data.open > 100 ? Math.floor(data.open) : data}})
+      const data = _.map(resp.data, data => {
+        const average = (data.open + data.close + data.high + data.low) / 4
+        return {
+          x: moment(data.date).format("MMM Do"),
+          y: average > 100 ? Math.floor(average) : average.toFixed(2)
+        }
+      })
       dispatch({
         type: 'SET_DATA',
         data: {
           id: symbol,
-          color: "hsl(193, 95%, 68%)",
           data
         }
       })
     })
-
-    return setTimeout(() => {
-      
-    }, 3000)
-  }
-}
-
-export const decrement = () => {
-  return dispatch => {
-    dispatch({
-      type: DECREMENT_REQUESTED
-    })
-
-    dispatch({
-      type: DECREMENT
-    })
-  }
-}
-
-export const decrementAsync = () => {
-  return dispatch => {
-    dispatch({
-      type: DECREMENT_REQUESTED
-    })
-
-    return setTimeout(() => {
-      dispatch({
-        type: DECREMENT
-      })
-    }, 3000)
   }
 }

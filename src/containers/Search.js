@@ -5,9 +5,9 @@ import { Search } from 'semantic-ui-react'
 import { push } from 'connected-react-router'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { setData } from '../modules/counter'
+import { setData } from '../modules/counter';
 
-const StockSearch = ({stocks, changePage, setData}) => {
+const StockSearch = ({stocks, changePage}) => {
   const initialState = { isLoading: false, results: _.take(stocks, 10), value: '' }
   const [state, updateState] = useState(initialState);
 
@@ -35,6 +35,7 @@ const StockSearch = ({stocks, changePage, setData}) => {
   return (
     <Search
       loading={state.isLoading}
+      placeholder='Search for a stock by name or symbol...'
       onResultSelect={handleResultSelect}
       onSearchChange={_.debounce(handleSearchChange, 500, {
         leading: true,

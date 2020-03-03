@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from "react-router-dom";
 import { ResponsiveLine } from '@nivo/line'
 import { bindActionCreators } from 'redux'
@@ -8,10 +8,16 @@ import { Statistic } from 'semantic-ui-react'
 
 
 const Stocks = ({stockData, setData}) => {
-  let { stockId } = useParams();
+  const { stockId } = useParams();
+  const symbol = stockId.toUpperCase()
+  useEffect(() => {
+    if (!stockData.data.length || (stockData.id !== symbol)) {
+      setData(symbol)
+    }
+  })
   return (
     <div>
-      <h1>{stockId.toUpperCase()}</h1>
+      <h1>{symbol}</h1>
       <div className="fill">
         {stockData.data.length > 0 ? <ResponsiveLine
           data={[stockData]}

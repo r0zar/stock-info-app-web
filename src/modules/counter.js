@@ -1,7 +1,7 @@
 import _ from 'lodash';
 const axios = require('axios');
 const moment = require('moment');
-const IEX_CLOUD_API_TOKEN = 'pk_212c74cb0280453baa89ddb99e331fd1 '
+const IEX_CLOUD_API_TOKEN = 'pk_38cc82908fb44e6d8ac659aba464ad99'
 
 const initialState = {
   data: {
@@ -15,16 +15,31 @@ export default (state = initialState, action) => {
     case 'SET_DATA_REQUESTED':
       return {
         ...state,
-        isIncrementing: true
       }
 
     case 'SET_DATA':
       return {
         ...state,
-        count: state.count + 1,
-        isIncrementing: !state.isIncrementing,
         data: action.data
       }
+
+    case 'GET_MARKET_DATA_MOST_ACTIVE':
+      return {
+        ...state,
+        mostActive: action.data
+      }
+
+    case 'GET_MARKET_DATA_GAINERS':
+      return {
+        ...state,
+        gainers: action.data
+      }
+
+      case 'GET_MARKET_DATA_LOSERS':
+        return {
+          ...state,
+          losers: action.data
+        }
     
     default:
       return state
@@ -52,6 +67,33 @@ export const setData = (symbol) => {
           id: symbol,
           data
         }
+      })
+    })
+  }
+}
+
+
+export const getMarketData = () => {
+  return dispatch => {
+    axios.get(`https://cloud.iexapis.com/v1/stock/market/list/mostactive?token=${IEX_CLOUD_API_TOKEN}`)
+    .then(resp => {
+      dispatch({
+        type: 'GET_MARKET_DATA_MOST_ACTIVE',
+        data: resp.data
+      })
+    })
+    axios.get(`https://cloud.iexapis.com/v1/stock/market/list/gainers?token=${IEX_CLOUD_API_TOKEN}`)
+    .then(resp => {
+      dispatch({
+        type: 'GET_MARKET_DATA_GAINERS',
+        data: resp.data
+      })
+    })
+    axios.get(`https://cloud.iexapis.com/v1/stock/market/list/losers?token=${IEX_CLOUD_API_TOKEN}`)
+    .then(resp => {
+      dispatch({
+        type: 'GET_MARKET_DATA_LOSERS',
+        data: resp.data
       })
     })
   }

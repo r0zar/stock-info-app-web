@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, Fragment } from 'react'
 import { Route } from 'react-router-dom'
 import Home from '../home'
 import Stocks from '../stocks'
@@ -9,10 +9,17 @@ import * as companies from '../../companylist.json'
 import { push } from 'connected-react-router'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import { getMarketData } from '../../modules/counter'
 const stocks = _.map(companies.default, (company) => { return {title: company.Symbol, description: company.Name}})
 
 
-const App = props => (
+const App = props => {
+  useEffect(() => {
+    if (!props.mostActive) {
+      props.getMarketData()
+    }
+  })
+  return (
   <div>
     <Menu fixed='top' inverted>
       <Container>
@@ -35,36 +42,42 @@ const App = props => (
       <Container textAlign='center'>
         <Grid divided inverted stackable>
           <Grid.Column width={3}>
-            <Header inverted as='h4' content='Group 1' />
+            <Header inverted as='h4' content='Most Active' />
             <List link inverted>
-              <List.Item as='a'>Link One</List.Item>
-              <List.Item as='a'>Link Two</List.Item>
-              <List.Item as='a'>Link Three</List.Item>
-              <List.Item as='a'>Link Four</List.Item>
+              { props.mostActive ? <Fragment>
+                <List.Item as='a' onClick={() => props.goTo(props.mostActive[0].symbol)}>{props.mostActive[0].symbol}</List.Item>
+                <List.Item as='a' onClick={() => props.goTo(props.mostActive[1].symbol)}>{props.mostActive[1].symbol}</List.Item>
+                <List.Item as='a' onClick={() => props.goTo(props.mostActive[2].symbol)}>{props.mostActive[2].symbol}</List.Item>
+                <List.Item as='a' onClick={() => props.goTo(props.mostActive[3].symbol)}>{props.mostActive[3].symbol}</List.Item>
+              </Fragment> : null }
             </List>
           </Grid.Column>
           <Grid.Column width={3}>
-            <Header inverted as='h4' content='Group 2' />
+            <Header inverted as='h4' content='Gainers' />
             <List link inverted>
-              <List.Item as='a'>Link One</List.Item>
-              <List.Item as='a'>Link Two</List.Item>
-              <List.Item as='a'>Link Three</List.Item>
-              <List.Item as='a'>Link Four</List.Item>
+              { props.gainers ? <Fragment>
+                <List.Item as='a' onClick={() => props.goTo(props.gainers[0].symbol)}>{props.gainers[0].symbol}</List.Item>
+                <List.Item as='a' onClick={() => props.goTo(props.gainers[1].symbol)}>{props.gainers[1].symbol}</List.Item>
+                <List.Item as='a' onClick={() => props.goTo(props.gainers[2].symbol)}>{props.gainers[2].symbol}</List.Item>
+                <List.Item as='a' onClick={() => props.goTo(props.gainers[3].symbol)}>{props.gainers[3].symbol}</List.Item>
+              </Fragment> : null }
             </List>
           </Grid.Column>
           <Grid.Column width={3}>
-            <Header inverted as='h4' content='Group 3' />
+            <Header inverted as='h4' content='Losers' />
             <List link inverted>
-              <List.Item as='a'>Link One</List.Item>
-              <List.Item as='a'>Link Two</List.Item>
-              <List.Item as='a'>Link Three</List.Item>
-              <List.Item as='a'>Link Four</List.Item>
+              { props.losers ? <Fragment>
+                <List.Item as='a' onClick={() => props.goTo(props.losers[0].symbol)}>{props.losers[0].symbol}</List.Item>
+                <List.Item as='a' onClick={() => props.goTo(props.losers[1].symbol)}>{props.losers[1].symbol}</List.Item>
+                <List.Item as='a' onClick={() => props.goTo(props.losers[2].symbol)}>{props.losers[2].symbol}</List.Item>
+                <List.Item as='a' onClick={() => props.goTo(props.losers[3].symbol)}>{props.losers[3].symbol}</List.Item>
+              </Fragment> : null }
             </List>
           </Grid.Column>
           <Grid.Column width={7}>
-            <Header inverted as='h4' content='Footer Header' />
+            <Header inverted as='h4' content='Powered by IEX Cloud API' />
             <p>
-              Extra space for a call to action inside the footer that could help re-engage users.
+              <a href='https://iexcloud.io/'>Click here to learn more</a>
             </p>
           </Grid.Column>
         </Grid>
@@ -88,15 +101,20 @@ const App = props => (
       </Container>
     </Segment>
   </div>
-)
+)}
 
-const mapStateToProps = () => ({
+const mapStateToProps = ({ counter }) => ({
+  mostActive: counter.mostActive,
+  gainers: counter.gainers,
+  losers: counter.losers,
 })
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      goHome: () => push('/')
+      getMarketData,
+      goHome: () => push('/'),
+      goTo: (symbol) => push(`/stocks/${symbol}`)
     },
     dispatch
   )

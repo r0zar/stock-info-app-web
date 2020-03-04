@@ -5,11 +5,14 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { setData } from '../../modules/counter'
 import { Statistic } from 'semantic-ui-react'
+import * as companies from '../../companylist.json'
+import _ from 'lodash';
 
 
 const Stocks = ({stockData, setData}) => {
   const { stockId } = useParams();
   const symbol = stockId.toUpperCase()
+  const company = _.find(companies.default, {Symbol: symbol})
   useEffect(() => {
     if (!stockData.data.length || (stockData.id !== symbol)) {
       setData(symbol)
@@ -18,6 +21,7 @@ const Stocks = ({stockData, setData}) => {
   return (
     <div>
       <h1>{symbol}</h1>
+      <div>{company.Name}</div>
       <div className="fill">
         {stockData.data.length > 0 ? <ResponsiveLine
           data={[stockData]}

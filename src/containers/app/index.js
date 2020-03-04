@@ -3,7 +3,7 @@ import { Route } from 'react-router-dom'
 import Home from '../home'
 import Stocks from '../stocks'
 import { Container, Divider, Grid, Header, Image, List, Menu, Segment } from 'semantic-ui-react'
-import StockSearch from '../Search'
+import StockSearch from './search'
 import _ from 'lodash';
 import * as companies from '../../companylist.json'
 import { push } from 'connected-react-router'

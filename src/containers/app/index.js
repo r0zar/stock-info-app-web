@@ -9,7 +9,7 @@ import * as companies from '../../companylist.json'
 import { push } from 'connected-react-router'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { getMarketData } from '../../modules/counter'
+import { getMarketData } from '../../modules/iexCloud'
 const stocks = _.map(companies.default, (company) => { return {title: company.Symbol, description: company.Name}})
 
 
@@ -103,10 +103,10 @@ const App = props => {
   </div>
 )}
 
-const mapStateToProps = ({ counter }) => ({
-  mostActive: counter.mostActive,
-  gainers: counter.gainers,
-  losers: counter.losers,
+const mapStateToProps = ({ iexCloud }) => ({
+  mostActive: iexCloud.mostActive,
+  gainers: iexCloud.gainers,
+  losers: iexCloud.losers,
 })
 
 const mapDispatchToProps = dispatch =>

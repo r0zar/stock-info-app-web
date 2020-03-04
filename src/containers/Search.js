@@ -5,7 +5,7 @@ import { Search } from 'semantic-ui-react'
 import { push } from 'connected-react-router'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { setData } from '../modules/counter';
+import { setData } from '../modules/iexCloud';
 
 const StockSearch = ({stocks, changePage}) => {
   const initialState = { isLoading: false, results: _.take(stocks, 10), value: '' }

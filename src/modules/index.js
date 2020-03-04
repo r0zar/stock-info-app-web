@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
-import counter from './counter'
+import iexCloud from './iexCloud'
 
 export default combineReducers({
-  counter
+  iexCloud
 })

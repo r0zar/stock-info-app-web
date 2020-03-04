@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import {
   setData
-} from '../../modules/counter'
+} from '../../modules/iexCloud'
 import { Message } from 'semantic-ui-react'
 
 const Home = props => (

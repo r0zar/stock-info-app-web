@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { ResponsiveLine } from '@nivo/line'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { setData } from '../../modules/counter'
+import { setData } from '../../modules/iexCloud'
 import { Statistic } from 'semantic-ui-react'
 import * as companies from '../../companylist.json'
 import _ from 'lodash';
@@ -101,8 +101,8 @@ const Stocks = ({stockData, setData}) => {
   )
 }
 
-const mapStateToProps = ({ counter }) => ({
-  stockData: counter.data
+const mapStateToProps = ({ iexCloud }) => ({
+  stockData: iexCloud.data
 })
 
 const mapDispatchToProps = dispatch =>

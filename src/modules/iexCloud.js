@@ -48,53 +48,30 @@ export default (state = initialState, action) => {
 
 
 export const setData = (symbol) => {
-  return dispatch => {
+  return async dispatch => {
     dispatch({type: 'SET_DATA_REQUESTED'})
-    // const range = '1m'
-    // const date = '2017-04-03'
-    axios.get(`https://cloud.iexapis.com/v1/stock/${symbol}/chart?token=${IEX_CLOUD_API_TOKEN}`)
-    .then(resp => {
-      const data = _.map(resp.data, data => {
-        const average = (data.open + data.close + data.high + data.low) / 4
-        return {
-          x: moment(data.date).format("MMM Do"),
-          y: average > 100 ? Math.floor(average) : average.toFixed(2)
-        }
-      })
-      dispatch({
-        type: 'SET_DATA',
-        data: {
-          id: symbol,
-          data
-        }
-      })
+    const resp = await axios.get(`https://cloud.iexapis.com/v1/stock/${symbol}/chart?token=${IEX_CLOUD_API_TOKEN}`)
+    const data = _.map(resp.data, data => {
+      const average = (data.open + data.close + data.high + data.low) / 4
+      return {
+        x: moment(data.date).format("MMM Do"),
+        y: average > 100 ? Math.floor(average) : average.toFixed(2)
+      }
     })
+    dispatch({type: 'SET_DATA', data: {id: symbol, data}})
   }
 }
 
 
 export const getMarketData = () => {
-  return dispatch => {
-    axios.get(`https://cloud.iexapis.com/v1/stock/market/list/mostactive?token=${IEX_CLOUD_API_TOKEN}`)
-    .then(resp => {
-      dispatch({
-        type: 'GET_MARKET_DATA_MOST_ACTIVE',
-        data: resp.data
-      })
-    })
-    axios.get(`https://cloud.iexapis.com/v1/stock/market/list/gainers?token=${IEX_CLOUD_API_TOKEN}`)
-    .then(resp => {
-      dispatch({
-        type: 'GET_MARKET_DATA_GAINERS',
-        data: resp.data
-      })
-    })
-    axios.get(`https://cloud.iexapis.com/v1/stock/market/list/losers?token=${IEX_CLOUD_API_TOKEN}`)
-    .then(resp => {
-      dispatch({
-        type: 'GET_MARKET_DATA_LOSERS',
-        data: resp.data
-      })
-    })
+  return async dispatch => {
+    const mostActiveResp = await axios.get(`https://cloud.iexapis.com/v1/stock/market/list/mostactive?token=${IEX_CLOUD_API_TOKEN}`)
+    dispatch({type: 'GET_MARKET_DATA_MOST_ACTIVE', data: mostActiveResp.data})
+
+    const gainersResp = await axios.get(`https://cloud.iexapis.com/v1/stock/market/list/gainers?token=${IEX_CLOUD_API_TOKEN}`)
+    dispatch({type: 'GET_MARKET_DATA_GAINERS', data: gainersResp.data})
+
+    const losersResp = await axios.get(`https://cloud.iexapis.com/v1/stock/market/list/losers?token=${IEX_CLOUD_API_TOKEN}`)
+    dispatch({type: 'GET_MARKET_DATA_LOSERS', data: losersResp.data})
   }
 }

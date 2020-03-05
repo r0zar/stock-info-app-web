@@ -10,7 +10,7 @@ import { Message } from 'semantic-ui-react'
 const Home = props => (
   <div>
     <h1>Home</h1>
-    <div>Welcome to the Stock Info App.</div>
+    <h4>Welcome to the Stock Info App.</h4>
     
     <div className="fill body">
       <Message>

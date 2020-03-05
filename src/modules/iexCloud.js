@@ -1,11 +1,14 @@
 import _ from 'lodash';
 const axios = require('axios');
 const moment = require('moment');
-const IEX_CLOUD_API_TOKEN = 'pk_38cc82908fb44e6d8ac659aba464ad99'
+const IEX_CLOUD_API_TOKEN = 'pk_5ef603fffcda4550b39a006ea4399800'
 
 const initialState = {
   data: {
     id: '',
+    data: []
+  },
+  candlestick: {
     data: []
   }
 }
@@ -20,7 +23,8 @@ export default (state = initialState, action) => {
     case 'SET_DATA':
       return {
         ...state,
-        data: action.data
+        data: action.data,
+        candlestick: action.candlestick
       }
 
     case 'GET_MARKET_DATA_MOST_ACTIVE':
@@ -55,10 +59,22 @@ export const setData = (symbol) => {
       const average = (data.open + data.close + data.high + data.low) / 4
       return {
         x: moment(data.date).format("MMM Do"),
-        y: average > 100 ? Math.floor(average) : average.toFixed(2)
+        y: average > 100 ? Math.floor(average) : average.toFixed(2),
       }
     })
-    dispatch({type: 'SET_DATA', data: {id: symbol, data}})
+    const candlestick = _.map(resp.data, data => {
+      const average = (data.open + data.close + data.high + data.low) / 4
+      return {
+        x: moment(data.date),
+        y: average > 100 ? Math.floor(average) : average.toFixed(2),
+        yHigh: data.high,
+        yOpen: data.open,
+        yClose: data.close,
+        yLow: data.low,
+        color: "#61DAFB"
+      }
+    })
+    dispatch({type: 'SET_DATA', data: {id: symbol, data}, candlestick: {data: candlestick}})
   }
 }
 

@@ -1,29 +1,35 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from "react-router-dom";
 import { ResponsiveLine } from '@nivo/line'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { setData } from '../../modules/iexCloud'
-import { Statistic } from 'semantic-ui-react'
+import { Statistic, Radio } from 'semantic-ui-react'
 import * as companies from '../../companylist.json'
 import _ from 'lodash';
+import ReactVisChart from "../candlestick/ReactVisChart";
 
 
-const Stocks = ({stockData, setData}) => {
+const Stocks = ({stockData, candlestickData, setData}) => {
   const { stockId } = useParams();
   const symbol = stockId.toUpperCase()
   const company = _.find(companies.default, {Symbol: symbol})
+  const [chart, setChart] = useState(true)
   useEffect(() => {
     if (!stockData.data.length || (stockData.id !== symbol)) {
       setData(symbol)
     }
   })
+  const handleChange = () => {
+    setChart(!chart)
+  }
   return (
     <div>
       <h1>{symbol}</h1>
-      <div>{company.Name}</div>
+      <h4>{company.Name}</h4>
       <div className="fill">
-        {stockData.data.length > 0 ? <ResponsiveLine
+        <Radio className='chart-toggle' toggle onChange={handleChange} label='Line / Candlestick' />
+        {stockData.data.length > 0 ? chart ? <ResponsiveLine
           data={[stockData]}
           margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
           xScale={{ type: 'point' }}
@@ -95,14 +101,15 @@ const Stocks = ({stockData, setData}) => {
               ]
             }
           ]}
-        /> : <h4>No data to show</h4>}
+        /> : <ReactVisChart data={candlestickData}></ReactVisChart> : <h4>No data to show</h4>}
       </div>
     </div>
   )
 }
 
 const mapStateToProps = ({ iexCloud }) => ({
-  stockData: iexCloud.data
+  stockData: iexCloud.data,
+  candlestickData: iexCloud.candlestick
 })
 
 const mapDispatchToProps = dispatch =>

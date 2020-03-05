@@ -27,3 +27,11 @@ button:disabled {
 .body {
   padding: 4rem 0rem;
 }
+
+.chart-toggle {
+  margin: 1rem 0 0 0;
+}
+
+.rv-xy-plot {
+  margin: 3rem 0rem;
+}
